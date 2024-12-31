@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -26,4 +28,27 @@ class UserCubit extends Cubit<UserState> {
   TextEditingController signUpPassword = TextEditingController();
   //Sign up confirm password
   TextEditingController confirmPassword = TextEditingController();
+
+  signIn() async {
+    try {
+      emit(SignInLoading());
+      final response = await Dio().post(
+        'https://food-api-omega.vercel.app/api/v1/user/signin',
+        data: {
+          'email': signInEmail.text,
+          'password': signInPassword.text,
+        },
+      );
+      emit(SignInSuccess());
+      if (kDebugMode) {
+        print(
+            "========================= ${response.data['token']} ============================");
+      }
+    } catch (e) {
+      emit(SignInFailure(errorMessage: e.toString()));
+      if (kDebugMode) {
+        print(e.toString());
+      }
+    }
+  }
 }
