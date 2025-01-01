@@ -8,15 +8,14 @@ class CustomInputField extends StatefulWidget {
   final bool obscureText;
   final TextEditingController? controller;
 
-  const CustomInputField({
-    super.key,
-    required this.labelText,
-    required this.hintText,
-    this.suffixIcon = false,
-    this.isDense,
-    this.obscureText = false,
-    this.controller,
-  });
+  const CustomInputField(
+      {super.key,
+      required this.labelText,
+      required this.hintText,
+      this.suffixIcon = false,
+      this.isDense,
+      this.obscureText = false,
+      this.controller});
 
   @override
   State<CustomInputField> createState() => _CustomInputFieldState();
@@ -63,7 +62,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
                   ? const BoxConstraints(maxHeight: 33)
                   : null,
             ),
-            autovalidateMode: AutovalidateMode.onUnfocus,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (textValue) {
               if (textValue == null || textValue.isEmpty) {
                 return 'required!';

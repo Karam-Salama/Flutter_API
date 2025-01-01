@@ -8,11 +8,7 @@ class CacheHelper {
     sharedPreferences = await SharedPreferences.getInstance();
   }
 
-//! this method to get data in local database using key
-
-  String? getDataString({
-    required String key,
-  }) {
+  String? getDataString({required String key}) {
     return sharedPreferences.getString(key);
   }
 
@@ -22,6 +18,7 @@ class CacheHelper {
     if (value is bool) {
       return await sharedPreferences.setBool(key, value);
     }
+
     if (value is String) {
       return await sharedPreferences.setString(key, value);
     }
@@ -50,12 +47,11 @@ class CacheHelper {
     return sharedPreferences.containsKey(key);
   }
 
-//! clear all data in the local database
-  Future<bool> clearData() async {
-    return await sharedPreferences.clear();
+  Future<bool> clearData({required String key}) async {
+    return sharedPreferences.clear();
   }
 
-//! this method to put data in local database using key
+//! this fun to put data in local data base using key
   Future<dynamic> put({
     required String key,
     required dynamic value,

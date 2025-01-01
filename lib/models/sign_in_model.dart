@@ -1,4 +1,4 @@
-import '../core/api/end_points.dart';
+import 'package:happy_tech_mastering_api_with_flutter/core/api/end_ponits.dart';
 
 class SignInModel {
   final String message;
@@ -8,7 +8,7 @@ class SignInModel {
 
   factory SignInModel.fromJson(Map<String, dynamic> jsonData) {
     return SignInModel(
-      message: jsonData[ApiKey.successMessage],
+      message: jsonData[ApiKey.message],
       token: jsonData[ApiKey.token],
     );
   }

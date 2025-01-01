@@ -1,11 +1,10 @@
-import 'package:happy_tech_mastering_api_with_flutter/core/api/end_points.dart';
+import 'package:happy_tech_mastering_api_with_flutter/core/api/end_ponits.dart';
 
 class SignUpModel {
-  String? message;
+  final String message;
 
-  SignUpModel({this.message});
-
-  SignUpModel.fromJson(Map<String, dynamic> jsonData) {
-    message = jsonData[ApiKey.successMessage];
+  SignUpModel({required this.message});
+  factory SignUpModel.fromJson(Map<String, dynamic> jsonData) {
+    return SignUpModel(message: jsonData[ApiKey.message]);
   }
 }

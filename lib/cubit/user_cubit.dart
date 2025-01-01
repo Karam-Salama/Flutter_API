@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:happy_tech_mastering_api_with_flutter/cache/cache_helper.dart';
+import 'package:happy_tech_mastering_api_with_flutter/core/api/api_consumer.dart';
+import 'package:happy_tech_mastering_api_with_flutter/core/api/end_ponits.dart';
+import 'package:happy_tech_mastering_api_with_flutter/core/errors/exceptions.dart';
+import 'package:happy_tech_mastering_api_with_flutter/core/functions/upload_image_to_api.dart';
+import 'package:happy_tech_mastering_api_with_flutter/cubit/user_state.dart';
 import 'package:happy_tech_mastering_api_with_flutter/models/sign_in_model.dart';
+import 'package:happy_tech_mastering_api_with_flutter/models/sign_up_model.dart';
+import 'package:happy_tech_mastering_api_with_flutter/models/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import '../core/api/api_consumer.dart';
-import '../core/api/end_points.dart';
-import '../core/errors/exceptions.dart';
-import '../core/functions/upload_image_to_api.dart';
-import '../models/sign_up_model.dart';
-import 'user_state.dart';
 
 class UserCubit extends Cubit<UserState> {
-  UserCubit({required this.apiConsumer}) : super(UserInitial());
-  ApiConsumer apiConsumer;
-  SignInModel? user;
-  SignUpModel? signUpModel;
-
+  UserCubit(this.api) : super(UserInitial());
+  final ApiConsumer api;
   //Sign in Form key
   GlobalKey<FormState> signInFormKey = GlobalKey();
   //Sign in email
@@ -37,12 +35,42 @@ class UserCubit extends Cubit<UserState> {
   TextEditingController signUpPassword = TextEditingController();
   //Sign up confirm password
   TextEditingController confirmPassword = TextEditingController();
+  SignInModel? user;
+
+  uploadProfilePic(XFile image) {
+    profilePic = image;
+    emit(UploadProfilePic());
+  }
+
+  signUp() async {
+    try {
+      emit(SignUpLoading());
+      final response = await api.post(
+        EndPoint.signUp,
+        isFromData: true,
+        data: {
+          ApiKey.name: signUpName.text,
+          ApiKey.phone: signUpPhoneNumber.text,
+          ApiKey.email: signUpEmail.text,
+          ApiKey.password: signUpPassword.text,
+          ApiKey.confirmPassword: confirmPassword.text,
+          ApiKey.location:
+              '{"name":"methalfa","address":"meet halfa","coordinates":[30.1572709,31.224779]}',
+          ApiKey.profilePic: await uploadImageToAPI(profilePic!)
+        },
+      );
+      final signUPModel = SignUpModel.fromJson(response);
+      emit(SignUpSuccess(message: signUPModel.message));
+    } on ServerException catch (e) {
+      emit(SignUpFailure(errMessage: e.errModel.errorMessage));
+    }
+  }
 
   signIn() async {
-    emit(SignInLoading());
     try {
-      final response = await apiConsumer.post(
-        EndPoints.signIn,
+      emit(SignInLoading());
+      final response = await api.post(
+        EndPoint.signIn,
         data: {
           ApiKey.email: signInEmail.text,
           ApiKey.password: signInPassword.text,
@@ -54,36 +82,21 @@ class UserCubit extends Cubit<UserState> {
       CacheHelper().saveData(key: ApiKey.id, value: decodedToken[ApiKey.id]);
       emit(SignInSuccess());
     } on ServerException catch (e) {
-      emit(SignInFailure(errorMessage: e.errorModel.errorMessage));
+      emit(SignInFailure(errMessage: e.errModel.errorMessage));
     }
   }
 
-  signUp() async {
-    emit(SignUpLoading());
+  getUserProfile() async {
     try {
-      final response = await apiConsumer.post(
-        EndPoints.signUp,
-        isFormData: true,
-        data: {
-          ApiKey.name: signUpName.text,
-          ApiKey.phone: signUpPhoneNumber.text,
-          ApiKey.email: signUpEmail.text,
-          ApiKey.password: signUpPassword.text,
-          ApiKey.confirmPassword: confirmPassword.text,
-          ApiKey.location:
-              '{"name":"methalfa","address":"meet halfa","coordinates":[30.1572709,31.224779]}',
-          ApiKey.image: await uploadImageToAPI(profilePic!),
-        },
+      emit(GetUserLoading());
+      final response = await api.get(
+        EndPoint.getUserDataEndPoint(
+          CacheHelper().getData(key: ApiKey.id),
+        ),
       );
-      signUpModel = SignUpModel.fromJson(response);
-      emit(SignUpSuccess(message: signUpModel!.message));
+      emit(GetUserSuccess(user: UserModel.fromJson(response)));
     } on ServerException catch (e) {
-      emit(SignUpFailure(errorMessage: e.errorModel.errorMessage));
+      emit(GetUserFailure(errMessage: e.errModel.errorMessage));
     }
-  }
-
-  uploadProfilePic(XFile image) {
-    profilePic = image;
-    emit(UploadProfilePicSuccess());
   }
 }
