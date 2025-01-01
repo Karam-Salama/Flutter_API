@@ -1,4 +1,4 @@
-import 'package:happy_tech_mastering_api_with_flutter/models/user_model.dart';
+import '../models/user_model.dart';
 
 class UserState {}
 

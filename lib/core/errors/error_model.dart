@@ -1,4 +1,4 @@
-import 'package:happy_tech_mastering_api_with_flutter/core/api/end_ponits.dart';
+import '../api/end_ponits.dart';
 
 class ErrorModel {
   final int status;

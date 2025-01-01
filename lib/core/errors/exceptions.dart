@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:happy_tech_mastering_api_with_flutter/core/errors/error_model.dart';
+import 'error_model.dart';
 
 class ServerException implements Exception {
   final ErrorModel errModel;

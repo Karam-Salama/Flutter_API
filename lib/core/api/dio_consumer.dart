@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:happy_tech_mastering_api_with_flutter/core/api/api_consumer.dart';
-import 'package:happy_tech_mastering_api_with_flutter/core/api/api_interceptors.dart';
-import 'package:happy_tech_mastering_api_with_flutter/core/api/end_ponits.dart';
-import 'package:happy_tech_mastering_api_with_flutter/core/errors/exceptions.dart';
+
+import '../errors/exceptions.dart';
+import 'api_consumer.dart';
+import 'api_interceptors.dart';
+import 'end_ponits.dart';
+
 
 class DioConsumer extends ApiConsumer {
   final Dio dio;
