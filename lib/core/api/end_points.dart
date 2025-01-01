@@ -16,5 +16,6 @@ class ApiKey {
   static const password = 'password';
   static const successMessage = 'message';
   static const token = 'token';
+  static const id = 'id';
 
 }
