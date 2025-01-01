@@ -7,12 +7,15 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import '../core/api/api_consumer.dart';
 import '../core/api/end_points.dart';
 import '../core/errors/exceptions.dart';
+import '../core/functions/upload_image_to_api.dart';
+import '../models/sign_up_model.dart';
 import 'user_state.dart';
 
 class UserCubit extends Cubit<UserState> {
   UserCubit({required this.apiConsumer}) : super(UserInitial());
   ApiConsumer apiConsumer;
   SignInModel? user;
+  SignUpModel? signUpModel;
 
   //Sign in Form key
   GlobalKey<FormState> signInFormKey = GlobalKey();
@@ -53,5 +56,34 @@ class UserCubit extends Cubit<UserState> {
     } on ServerException catch (e) {
       emit(SignInFailure(errorMessage: e.errorModel.errorMessage));
     }
+  }
+
+  signUp() async {
+    emit(SignUpLoading());
+    try {
+      final response = await apiConsumer.post(
+        EndPoints.signUp,
+        isFormData: true,
+        data: {
+          ApiKey.name: signUpName.text,
+          ApiKey.phone: signUpPhoneNumber.text,
+          ApiKey.email: signUpEmail.text,
+          ApiKey.password: signUpPassword.text,
+          ApiKey.confirmPassword: confirmPassword.text,
+          ApiKey.location:
+              '{"name":"methalfa","address":"meet halfa","coordinates":[30.1572709,31.224779]}',
+          ApiKey.image: await uploadImageToAPI(profilePic!),
+        },
+      );
+      signUpModel = SignUpModel.fromJson(response);
+      emit(SignUpSuccess(message: signUpModel!.message));
+    } on ServerException catch (e) {
+      emit(SignUpFailure(errorMessage: e.errorModel.errorMessage));
+    }
+  }
+
+  uploadProfilePic(XFile image) {
+    profilePic = image;
+    emit(UploadProfilePicSuccess());
   }
 }

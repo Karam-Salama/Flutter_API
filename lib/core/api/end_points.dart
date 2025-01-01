@@ -18,4 +18,9 @@ class ApiKey {
   static const token = 'token';
   static const id = 'id';
 
+  static const name = 'name';
+  static const phone = 'phone';
+  static const confirmPassword = 'confirmPassword';
+  static const location = 'location';
+  static const image = 'profilePic';
 }
