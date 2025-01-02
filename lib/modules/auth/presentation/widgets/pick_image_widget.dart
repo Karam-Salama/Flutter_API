@@ -1,12 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:happy_tech_mastering_api_with_flutter/cubit/user_cubit.dart';
-import 'package:happy_tech_mastering_api_with_flutter/cubit/user_state.dart';
 import 'package:image_picker/image_picker.dart';
+import '../cubit/auth_cubit.dart';
 
 class PickImageWidget extends StatelessWidget {
   const PickImageWidget({
@@ -15,13 +13,13 @@ class PickImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<UserCubit, UserState>(
+    return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {},
       builder: (context, state) {
         return SizedBox(
           width: 130,
           height: 130,
-          child: context.read<UserCubit>().profilePic == null
+          child: context.read<AuthCubit>().profilePic == null
               ? CircleAvatar(
                   backgroundColor: Colors.grey.shade200,
                   backgroundImage: const AssetImage("assets/images/avatar.png"),
@@ -44,9 +42,11 @@ class PickImageWidget extends StatelessWidget {
                               onTap: () {
                                 ImagePicker()
                                     .pickImage(source: ImageSource.gallery)
-                                    .then((value) => context
-                                        .read<UserCubit>()
-                                        .uploadProfilePic(value!));
+                                    .then(
+                                      (value) => context
+                                          .read<AuthCubit>()
+                                          .uploadProfilePic(value!),
+                                    );
                               },
                               child: const Icon(
                                 Icons.camera_alt_sharp,
@@ -62,7 +62,8 @@ class PickImageWidget extends StatelessWidget {
                 )
               : CircleAvatar(
                   backgroundImage: FileImage(
-                      File(context.read<UserCubit>().profilePic!.path)),
+                    File(context.read<AuthCubit>().profilePic!.path),
+                  ),
                 ),
         );
       },

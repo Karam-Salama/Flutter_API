@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:happy_tech_mastering_api_with_flutter/models/user_model.dart';
 import 'package:image_picker/image_picker.dart';
-import '../models/sign_in_model.dart';
-import '../models/sign_up_model.dart';
 
-abstract class UserRepo {
+import '../../Data/models/sign_in_model.dart';
+import '../../Data/models/sign_up_model.dart';
+
+abstract class AuthRepo {
   Future<Either<String, SignInModel>> signIn({
     required String email,
     required String password,
@@ -18,6 +18,4 @@ abstract class UserRepo {
     required String confirmPassword,
     required XFile profilePic,
   });
-
-  Future<Either<String, UserModel>> getUserProfileData();
 }

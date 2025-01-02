@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../cubit/user_cubit.dart';
-import '../cubit/user_state.dart';
+import '../cubit/auth_cubit.dart';
 import '../widgets/already_have_an_account_widget.dart';
 import '../widgets/custom_form_button.dart';
 import '../widgets/custom_input_field.dart';
@@ -10,14 +8,13 @@ import '../widgets/page_header.dart';
 import '../widgets/page_heading.dart';
 import '../widgets/pick_image_widget.dart';
 
-
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: BlocConsumer<UserCubit, UserState>(
+      child: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is SignUpSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -34,7 +31,7 @@ class SignUpScreen extends StatelessWidget {
             backgroundColor: const Color(0xffEEF1F3),
             body: SingleChildScrollView(
               child: Form(
-                key: context.read<UserCubit>().signUpFormKey,
+                key: context.read<AuthCubit>().signUpFormKey,
                 child: Column(
                   children: [
                     const PageHeader(),
@@ -47,7 +44,7 @@ class SignUpScreen extends StatelessWidget {
                       labelText: 'Name',
                       hintText: 'Your name',
                       isDense: true,
-                      controller: context.read<UserCubit>().signUpName,
+                      controller: context.read<AuthCubit>().signUpName,
                     ),
                     const SizedBox(height: 16),
                     //!Email
@@ -55,7 +52,7 @@ class SignUpScreen extends StatelessWidget {
                       labelText: 'Email',
                       hintText: 'Your email',
                       isDense: true,
-                      controller: context.read<UserCubit>().signUpEmail,
+                      controller: context.read<AuthCubit>().signUpEmail,
                     ),
                     const SizedBox(height: 16),
                     //! Phone Number
@@ -63,7 +60,7 @@ class SignUpScreen extends StatelessWidget {
                       labelText: 'Phone number',
                       hintText: 'Your phone number ex:01234567890',
                       isDense: true,
-                      controller: context.read<UserCubit>().signUpPhoneNumber,
+                      controller: context.read<AuthCubit>().signUpPhoneNumber,
                     ),
                     const SizedBox(height: 16),
                     //! Password
@@ -73,7 +70,7 @@ class SignUpScreen extends StatelessWidget {
                       isDense: true,
                       obscureText: true,
                       suffixIcon: true,
-                      controller: context.read<UserCubit>().signUpPassword,
+                      controller: context.read<AuthCubit>().signUpPassword,
                     ),
                     //! Confirm Password
                     CustomInputField(
@@ -82,7 +79,7 @@ class SignUpScreen extends StatelessWidget {
                       isDense: true,
                       obscureText: true,
                       suffixIcon: true,
-                      controller: context.read<UserCubit>().confirmPassword,
+                      controller: context.read<AuthCubit>().confirmPassword,
                     ),
                     const SizedBox(height: 22),
                     //!Sign Up Button
@@ -91,7 +88,7 @@ class SignUpScreen extends StatelessWidget {
                         : CustomFormButton(
                             innerText: 'Signup',
                             onPressed: () {
-                              context.read<UserCubit>().signUp();
+                              context.read<AuthCubit>().signUp();
                             },
                           ),
                     const SizedBox(height: 18),

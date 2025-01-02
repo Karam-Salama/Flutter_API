@@ -1,22 +1,19 @@
 import 'package:dartz/dartz.dart';
-
-import 'package:happy_tech_mastering_api_with_flutter/models/sign_in_model.dart';
-import 'package:happy_tech_mastering_api_with_flutter/models/sign_up_model.dart';
-import 'package:happy_tech_mastering_api_with_flutter/models/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import '../../../../core/api/api_consumer.dart';
+import '../../../../core/api/end_ponits.dart';
+import '../../../../core/cache/cache_helper.dart';
+import '../../../../core/errors/exceptions.dart';
+import '../../../../core/functions/upload_image_to_api.dart';
+import '../../Domain/repo/auth_repo.dart';
+import '../models/sign_in_model.dart';
+import '../models/sign_up_model.dart';
 
-import '../cache/cache_helper.dart';
-import '../core/api/api_consumer.dart';
-import '../core/api/end_ponits.dart';
-import '../core/errors/exceptions.dart';
-import '../core/functions/upload_image_to_api.dart';
-import '../repositry/user_repo.dart';
-
-class UserRepoImplementation extends UserRepo {
+class AuthRepoImplement extends AuthRepo {
   final ApiConsumer api;
 
-  UserRepoImplementation({required this.api});
+  AuthRepoImplement({required this.api});
 
   @override
   Future<Either<String, SignInModel>> signIn({
@@ -67,20 +64,6 @@ class UserRepoImplementation extends UserRepo {
       );
       final signUPModel = SignUpModel.fromJson(response);
       return Right(signUPModel);
-    } on ServerException catch (e) {
-      return Left(e.errModel.errorMessage);
-    }
-  }
-
-  @override
-  Future<Either<String, UserModel>> getUserProfileData() async {
-    try {
-      final response = await api.get(
-        EndPoint.getUserDataEndPoint(
-          CacheHelper().getData(key: ApiKey.id),
-        ),
-      );
-      return Right(UserModel.fromJson(response));
     } on ServerException catch (e) {
       return Left(e.errModel.errorMessage);
     }

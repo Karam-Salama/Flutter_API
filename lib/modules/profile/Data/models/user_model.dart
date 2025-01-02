@@ -1,5 +1,4 @@
-
-import '../core/api/end_ponits.dart';
+import '../../../../core/api/end_ponits.dart';
 
 class UserModel {
   final String email;

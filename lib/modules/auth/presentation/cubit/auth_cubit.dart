@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:image_picker/image_picker.dart';
 
-import '../models/sign_in_model.dart';
-import '../repo_implementation/user_repo_implementation.dart';
-import 'user_state.dart';
+import '../../Data/models/sign_in_model.dart';
+import '../../Data/repo_implemnt/auth_repo_implement.dart';
 
-class UserCubit extends Cubit<UserState> {
-  UserCubit(this.userRepoImplementation) : super(UserInitial());
-  final UserRepoImplementation userRepoImplementation;
+part 'auth_state.dart';
+
+class AuthCubit extends Cubit<AuthState> {
+  AuthCubit(this.authRepoImplementation) : super(AuthInitial());
+  final AuthRepoImplement authRepoImplementation;
+
   //Sign in Form key
   GlobalKey<FormState> signInFormKey = GlobalKey();
   //Sign in email
@@ -39,8 +40,7 @@ class UserCubit extends Cubit<UserState> {
 
   signUp() async {
     emit(SignUpLoading());
-
-    final response = await userRepoImplementation.signUp(
+    final response = await authRepoImplementation.signUp(
       name: signUpName.text,
       phone: signUpPhoneNumber.text,
       email: signUpEmail.text,
@@ -48,7 +48,6 @@ class UserCubit extends Cubit<UserState> {
       confirmPassword: confirmPassword.text,
       profilePic: profilePic!,
     );
-
     response.fold(
       (errorMessage) => emit(SignUpFailure(errMessage: errorMessage)),
       (signUpModel) => emit(SignUpSuccess(message: signUpModel.message)),
@@ -57,23 +56,13 @@ class UserCubit extends Cubit<UserState> {
 
   signIn() async {
     emit(SignInLoading());
-    final response = await userRepoImplementation.signIn(
+    final response = await authRepoImplementation.signIn(
       email: signInEmail.text,
       password: signInPassword.text,
     );
-
     response.fold(
       (errorMessage) => emit(SignInFailure(errMessage: errorMessage)),
       (signInModel) => emit(SignInSuccess()),
-    );
-  }
-
-  getUserProfile() async {
-    emit(GetUserLoading());
-    final response = await userRepoImplementation.getUserProfileData();
-    response.fold(
-      (errorMessage) => emit(GetUserFailure(errMessage: errorMessage)),
-      (userModel) => emit(GetUserSuccess(user: userModel)),
     );
   }
 }

@@ -7,13 +7,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:happy_tech_mastering_api_with_flutter/app/test_api_app.dart';
 
-import 'package:happy_tech_mastering_api_with_flutter/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(const TestAPI());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
